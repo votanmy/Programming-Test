@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>Coding-challenge jQuery</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="markup">
+      <input id="nd" type="text">
+      <input id="ipArr" type="text">
+      <div id="result"></div>
+    </div>
+
+    <script>
+
+      (function($){
+
+        // Declaration and focus to the input of n and d
+        var n, d;
+        $('#nd').focus();
+        
+        // Handle the input of n and d
+        $('#nd').on('keyup', function(){
+          // Convert input string to array
+          var ndArr = $(this).val().split(' ');
+          if( ndArr.length > 2 ){
+            // stop inputing if number of input is more than 2
+            $(this).prop('disabled',true);
+            // Get n and d values
+            n = parseInt(ndArr[0]);
+            d = parseInt(ndArr[1]);
+            // Focus to the input of array elements
+            $('#ipArr').focus();
+          }
+        });
+
+        // Handle the input of array elements
+        $('#ipArr').on('keyup', function(){
+          // Convert input string to array
+          var origArr = $(this).val().split(' ');
+          if( origArr.length > n ){
+            // stop inputing if number of input more than n
+            $(this).prop('disabled',true);
+            // Remove redundant elements
+            origArr.splice(n);
+            // Call the core function, convert to string with .join() then display result
+            newArr = rotLeft(origArr, d).join(' ');
+            $('#result').text(newArr);
+          }
+        });
+
+        // The core function
+        function rotLeft(arr, d){
+          $.each(arr, function(idx,val) {
+            // Do this for d times
+            if(idx === d){
+              return false;
+            }
+            // Remove the first element then insert it to the end of the array
+            arr.push(arr.shift());
+          });
+          return arr;
+        }
+
+      })(jQuery);
+
+ 
+    </script>
+
+    <style>
+      body{
+        font-family: sans-serif;
+      }
+      .markup{
+        width: 50%;
+        margin: 0 auto;
+        margin-top: 15%;
+      }
+      input, input:focus, input:focus-visible{
+        border: none;      
+        appearance:none;
+        -webkit-appearance:none;
+        display: block;       
+        margin-bottom: 5%;
+        width: 100%;
+        min-height: 2em;
+        font-size: 1em;
+        font-family: sans-serif;  
+        background-color: #f5f5f5;    
+      }      
+    </style>
+  </body>
+
+</html>
