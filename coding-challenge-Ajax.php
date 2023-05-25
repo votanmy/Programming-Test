@@ -1,8 +1,22 @@
 <?php
-// Handle AJAX request (start)
+// Handle AJAX request
 if( isset($_POST['ajax']) && isset($_POST['origArr']) && isset($_POST['d']) ){
-  echo $_POST['d'];
+  // Apply core function to the client's array
+  $rotArr = rotLeft( $_POST['origArr'], $_POST['d']);
+  // Send result to client side
+  echo $rotArr;
   exit;
+}
+
+// The core function
+function rotLeft( $arr, $d){
+  // Do this for d times
+  for($i=0; $i < $d; $i++){
+    // Remove the first element then insert it to the end of the array
+    array_push($arr, array_shift($arr));
+  }
+  // Convert array to string
+  return implode(' ', $arr);
 }
 ?>
 <!DOCTYPE html>
@@ -14,7 +28,7 @@ if( isset($_POST['ajax']) && isset($_POST['origArr']) && isset($_POST['d']) ){
   </head>
 
   <body>
-    <div class="markup">      
+    <div class="markup">
       <input id="nd" type="text">
       <input id="ipArr" type="text">
       <div id="result"></div>
@@ -22,50 +36,47 @@ if( isset($_POST['ajax']) && isset($_POST['origArr']) && isset($_POST['d']) ){
 
     <script>
 
-      // jQuery(document).ready(function($){
       (function($){
+
+        // Declaration and focus to the input of n and d
         var n, d;
         $('#nd').focus();
-        
+
+        // Handle the input of n and d
         $('#nd').on('keyup', function(){
-          var ndArr = $(this).val().split(" ");
+          // Convert input string to array
+          var ndArr = $(this).val().split(' ');
           if( ndArr.length > 2 ){
+            // stop inputing if number of input is more than 2
             $(this).prop('disabled',true);
+            // Get n and d values
             n = parseInt(ndArr[0]);
             d = parseInt(ndArr[1]);
+            // Focus to the input of array elements
             $('#ipArr').focus();
           }
         });
 
+        // Handle the input of array elements
         $('#ipArr').on('keyup', function(){
-          var origArr = $(this).val().split(" ");
+          // Convert input string to array
+          var origArr = $(this).val().split(' ');
           if( origArr.length > n ){
+            // stop inputing if number of input more than n
             $(this).prop('disabled',true);
+            // Remove redundant elements
             origArr.splice(n);
-
+            // Ajax request
             $.ajax({
               type: 'post',
               data: {ajax: 1, origArr: origArr, d: d},
               success: function(response){
-                $('#result').text('d= ' + response);
+                // Get result from server then print out
+                $('#result').text(response);
               }
             });
-
-
-            /* origArr = rotLeft(origArr, d).join(' ');
-            $('#result').text(origArr); */
           }
         });
-
-        /* function rotLeft(arr, d){
-          $.each(arr, function(idx,val) {
-            if(idx === d){
-              return false;
-            }
-            arr.push(arr.shift());
-          });
-          return arr;
-        } */        
 
       })(jQuery);
 
@@ -82,6 +93,7 @@ if( isset($_POST['ajax']) && isset($_POST['origArr']) && isset($_POST['d']) ){
       }
       input, input:focus, input:focus-visible{
         border: none;      
+        appearance:none;
         -webkit-appearance:none;
         display: block;       
         margin-bottom: 5%;
