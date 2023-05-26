@@ -43,29 +43,27 @@ function rotLeft( $arr, $d){
         $('#nd').focus();
 
         // Handle the input of n and d
-        $('#nd').on('keyup', function(){
+        $('#nd').on('change', function(){
           // Convert input string to array
           var ndArr = $(this).val().split(' ');
-          if( ndArr.length > 2 ){
-            // stop inputing if number of input is more than 2
-            $(this).prop('disabled',true);
+            // Allow only 2 numbers
+          if(ndArr.length === 2){
             // Get n and d values
             n = parseInt(ndArr[0]);
             d = parseInt(ndArr[1]);
             // Focus to the input of array elements
             $('#ipArr').focus();
+          }else{
+            alert('Please input 2 numbers with one space between');
           }
         });
 
         // Handle the input of array elements
-        $('#ipArr').on('keyup', function(){
+        $('#ipArr').on('change', function(){
           // Convert input string to array
           var origArr = $(this).val().split(' ');
-          if( origArr.length > n ){
-            // stop inputing if number of input more than n
-            $(this).prop('disabled',true);
-            // Remove redundant elements
-            origArr.splice(n);
+          // Allow only n elements
+          if(origArr.length === n){
             // Ajax request
             $.ajax({
               type: 'post',
@@ -74,8 +72,11 @@ function rotLeft( $arr, $d){
                 // Get result from server then print out
                 $('#result').text(response);
               }
-            });
+            });         
+          }else{
+            alert('Please input ' + n + ' elements with spaces between');
           }
+
         });
 
       })(jQuery);
