@@ -23,31 +23,31 @@
       nd.focus();
 
       // Handle the input of n and d
-      nd.addEventListener('keyup', ()=>{
+      nd.addEventListener('change', ()=>{
         // Convert input string to array
         let ndArr = nd.value.split(' ');
-        if(ndArr.length > 2){
-          // stop inputing if number of input is more than 2
-          nd.disabled = true;
+        // Allow only 2 numbers
+        if(ndArr.length === 2){
           // Get n and d values
           n = parseInt(ndArr[0]);
           d = parseInt(ndArr[1]);
           // Focus to the input of array elements
           ipArr.focus();
-        }          
+        }else{
+          alert('Please input 2 numbers with one space between');
+        }
       });
 
       // Handle the input of array elements
-      ipArr.addEventListener('keyup', ()=>{
+      ipArr.addEventListener('change', ()=>{
         // Convert input string to array
         origArr = ipArr.value.split(' ');
-        if( origArr.length > n ){
-          // stop inputing if number of input more than n
-          ipArr.disabled = true;
-          // Remove redundant elements
-          origArr.splice(n);
-          // Call the core function, convert to string with .join() then display result
-          result.textContent = rotLeft(origArr, d).join(' ');
+        // Allow only n elements
+        if(origArr.length === n){
+          // Call the core function then display the result
+          result.textContent = rotLeft(origArr, d).join(' ');          
+        }else{
+          alert('Please input ' + n + ' elements with spaces between');
         }
       });
 
